@@ -2,6 +2,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const express = require("express");
 const socket = require("socket.io");
+const cookieParser = require("cookie-parser");
 
 const usersRoutes = require("./Routers/UserSchem");
 const checkAuth = require("./Auth/checkAuth");
@@ -16,6 +17,7 @@ mongoose.connection.on('connected', () => {
 
 app.use((morgan('dev')));
 app.use(express.json());
+app.use(cookieParser());
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Authorization');
@@ -28,7 +30,7 @@ app.use((req, res, next) => {
 
 app.use(express.static('public'));
 
-app.post("/checkAuth", checkAuth, (req, res) => { return res.status(200).send("Good ! " +  req.tokenData) })
+app.post("/checkAuth", checkAuth, (req, res) => { return res.status(200).send("Good ! " + req.tokenData) })
 app.use('/users', usersRoutes);
 
 

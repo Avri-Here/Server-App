@@ -12,10 +12,9 @@ const obj = {
             return res.status(200).json({ response })
         })
 
-    }), signIn: ((req, res) => {
+    }), Login: ((req, res) => {
         const { Name1, Name2, pass } = req.body;
         UserSchem.find({ Name: Name1 + " " + Name2, password: pass }).then((response) => {
-            console.log(response);
             if (response.length === 0) {
                 return res.status(401).send("לא מזוהה, נסה שוב !")
             } else {
@@ -33,7 +32,7 @@ const obj = {
         UserSchem.find({ Name: Name1 + " " + Name2 }).then((response) => {
             console.log(response);
             if (response.length === 0) {
-              
+
                 const Account = new UserSchem({
                     Name: Name1 + " " + Name2,
                     password: pass,
@@ -59,7 +58,7 @@ const obj = {
     }
 };
 router.post('/getAllUsers', checkAuth, obj.getAllUsers);
-router.post('/signIn', obj.signIn);
+router.post('/Login', obj.Login);
 router.post('/signUp', obj.signUp);
 router.post('/delete', obj.deleteUser);
 router.post('/Update', obj.Updateusers);
