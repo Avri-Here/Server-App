@@ -15,7 +15,6 @@ const obj = {
     }), signIn: ((req, res) => {
         const { Name1, Name2, pass } = req.body;
         UserSchem.find({ Name: Name1 + " " + Name2, password: pass }).then((response) => {
-            console.log(response);
             if (response.length === 0) {
                 return res.status(401).send("לא מזוהה, נסה שוב !")
             } else {
@@ -31,9 +30,8 @@ const obj = {
     }), signUp: ((req, res) => {
         const { Name1, Name2, pass } = req.body;
         UserSchem.find({ Name: Name1 + " " + Name2 }).then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.length === 0) {
-              
                 const Account = new UserSchem({
                     Name: Name1 + " " + Name2,
                     password: pass,

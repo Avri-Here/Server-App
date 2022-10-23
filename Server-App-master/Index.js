@@ -1,7 +1,10 @@
+
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const express = require("express");
 const socket = require("socket.io");
+
+
 
 const usersRoutes = require("./Routers/UserSchem");
 const checkAuth = require("./Auth/checkAuth");
@@ -10,9 +13,20 @@ const app = express();
 
 mongoose.connect("mongodb+srv://Chaim24:" + process.env.MongoPasword + "@binders.uazlu3v.mongodb.net/binders", { useNewUrlParser: true, useUnifiedTopology: true });
 
+
 mongoose.connection.on('connected', () => {
     console.log("Mongo db Connected !");
 })
+
+
+
+
+
+
+
+
+
+
 
 app.use((morgan('dev')));
 app.use(express.json());
