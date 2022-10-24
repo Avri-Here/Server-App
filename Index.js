@@ -5,6 +5,7 @@ const socket = require("socket.io");
 const cookieParser = require("cookie-parser");
 
 const usersRoutes = require("./Routers/UserSchem");
+const eventRoutes = require("./Routers/eventRoutes");
 const checkAuth = require("./Auth/checkAuth");
 
 const app = express();
@@ -32,6 +33,7 @@ app.use(express.static('public'));
 
 app.post("/checkAuth", checkAuth, (req, res) => { return res.status(200).send("Good ! " + req.tokenData) })
 app.use('/users', usersRoutes);
+app.use('/event', eventRoutes);
 
 
 app.use((req, res, next) => {
