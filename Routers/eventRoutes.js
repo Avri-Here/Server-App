@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Event = require("../Schems/CreateEvent");
+const EventChat = require("../Schems/EventChat");
 
 
 
@@ -36,25 +37,38 @@ const obj = {
             res.status(410).json({ GetIt: error })
         }
 
-    }), signUp: ((req, res) => {
-        const { Name1, Name2, pass } = req.body;
-        UserSchem.find({ Name: Name1 + " " + Name2 }).then((response) => {
+    }), EventChat: ((req, res) => {
+        const { IdEvent, from, messages } = req.body;
+        EventChat.find({ IdEvent: IdEvent }).then((response) => {
             console.log(response);
-            if (response.length === 0) {
+            if (response.length === 0 && messages) {
 
-                const Account = new UserSchem({
-                    Name: Name1 + " " + Name2,
-                    password: pass,
-                    photoUser: "photoUser"
+                const newEventChat = new EventChat({
+                    IdEvent: IdEvent,
+                    EventMessages: [{ from: from, messages: messages }]
                 })
-                Account.save().then(() => {
-                    res.status(200).json({ message: "Created !  " })
+                newEventChat.save().then(() => {
+                    res.status(200).json({ Success: "Comment added !" })
                 }).catch((erorr) => {
                     res.status(500).json({ erorr })
                 })
             }
+            else if (!messages) {
+                const returnRes = response.length === 0 ? ["אין תגובות עדיין"] : response;
+                res.status(200).json({ TakeIt: returnRes })
+            }
             else {
-                res.status(209).json({ message: "Conflit !  " + response[0].Name + " Is exsist !" })
+                EventChat.updateOne(
+                    { IdEvent: IdEvent },
+                    { $push: { EventMessages: { from: from, messages: messages } } },
+                    function (err, result) {
+                        if (err) {
+                            res.status(500).json({ err })
+                        } else {
+                            res.status(200).json({ Success: "Comment added !" })
+                        }
+                    }
+                )
             }
 
         })
@@ -68,7 +82,7 @@ const obj = {
 };
 router.get('/allEvents', obj.allEvents);
 router.post('/CreateEvent', obj.CreateEvent);
-// router.post('/signUp', obj.signUp);
+router.post('/EventChat', obj.EventChat);
 // router.post('/delete', obj.deleteUser);
 // router.post('/Update', obj.Updateusers);
 module.exports = router;
