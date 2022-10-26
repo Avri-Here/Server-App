@@ -54,7 +54,7 @@ const obj = {
                 })
             }
             else if (!messages) {
-                const returnRes = response.length === 0 ? ["אין תגובות עדיין"] : response;
+                const returnRes = response.length === 0 ? [{ EventMessages: [{ messages: "אין תגובות עדיין" }] }] : response;
                 res.status(200).json({ TakeIt: returnRes })
             }
             else {
