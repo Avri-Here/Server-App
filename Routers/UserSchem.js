@@ -26,7 +26,7 @@ const obj = {
           );
           return res
             .status(200)
-            .json({ message: response[0].Name + " ברוך הבא !", token: token });
+            .json({ message: response[0].Name, token: token });
         }
       }
     );
@@ -55,8 +55,8 @@ const obj = {
       }
     });
   },
-  Updateusers: () => {},
-  deleteUser: () => {},
+  Updateusers: () => { },
+  deleteUser: () => { },
 };
 router.post("/getAllUsers", checkAuth, obj.getAllUsers);
 router.post("/Login", obj.Login);

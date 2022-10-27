@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 app.use(express.static('public'));
 
-app.post("/checkAuth", checkAuth, (req, res) => { return res.status(200).send("Good ! " + req.tokenData) })
+app.post("/checkAuth", checkAuth, (req, res) => { return res.status(200).json({ Good: req.tokenData }) })
 app.use('/users', usersRoutes);
 app.use('/event', eventRoutes);
 
