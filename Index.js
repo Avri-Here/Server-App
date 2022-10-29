@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 
 const usersRoutes = require("./Routers/UserSchem");
 const eventRoutes = require("./Routers/eventRoutes");
+const adminRoutes = require("./Routers/adminRoutes");
 const checkAuth = require("./Auth/checkAuth");
 
 const app = express();
@@ -35,6 +36,7 @@ app.use(express.static('public'));
 app.post("/checkAuth", checkAuth, (req, res) => { return res.status(200).json({ Good: req.tokenData }) })
 app.use('/users', usersRoutes);
 app.use('/event', eventRoutes);
+app.use('/admin', adminRoutes);
 
 
 app.use((req, res, next) => {

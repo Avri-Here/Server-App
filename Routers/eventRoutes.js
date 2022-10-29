@@ -10,7 +10,8 @@ const obj = {
         const newEvent = new Event({
             NameEvent: req.body.NameEvent,
             Date: req.body.Date,
-            photoUser: req.body.photoUser
+            photoUser: req.body.photoUser,
+            Active:true
         })
         console.log(newEvent);
         try {
@@ -26,7 +27,7 @@ const obj = {
 
     }), allEvents: (async (req, res) => {
         try {
-            const response = await Event.find({});
+            const response = await Event.find({Active:true});
             console.log(response);
             response.forEach((element, index) => {
                 response[index].Date = element.Date.slice(0, 10);
