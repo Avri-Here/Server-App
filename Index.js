@@ -76,9 +76,9 @@ const io = socket(server, {
 
 
 io.on('connection', (socket) => {
-    socket.on('chat message from clinet', (msg, comper) => {
-        console.log(msg, comper);
-        io.sockets.emit('chat message', msg, comper);
+    socket.on('live On', (msg, userName, idEve, timeMass) => {
+        console.log(msg, userName, idEve, timeMass);
+        io.sockets.emit('live On React', msg, userName, idEve, timeMass);
     });
 });
 
