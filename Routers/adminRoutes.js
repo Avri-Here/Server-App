@@ -150,7 +150,7 @@ idEvent: ((req, res) => {
   deleteUser: () => { },
 };
 router.post("/getAllUsers", checkAuth, obj.getAllUsers);
-router.get("/getAllUsers", obj.getAllUsers);
+router.get("/showAllUsers", obj.getAllUsers);
 router.post("/Login", obj.Login);
 router.post("/signUp", obj.signUp);
 router.post("/delete", obj.deleteUser);

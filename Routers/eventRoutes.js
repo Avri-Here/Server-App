@@ -2,11 +2,31 @@ const express = require("express");
 const router = express.Router();
 const Event = require("../Schems/CreateEvent");
 const EventChat = require("../Schems/EventChat");
-
-
-
+ 
 const obj = {
-    CreateEvent: (async (req, res) => {
+    changeEvent:((req, res) => {
+        const { NameEvent } = req.body;
+        Event.find({ IdEvent: IdEvent }).then((response) => {
+            if (response.length === 0 && NameEvent) {
+                Event.updateOne(
+                    { IdEvent: IdEvent },
+                    { $push: { Active: false } },
+                    function (err, result) {
+                        if (err) {
+                            res.status(500).json({ err })
+                        } else {
+                            res.status(200).json({ Success: "Comment added !" })
+                        }
+                    } 
+                )
+            }
+         
+            else {
+                
+            }
+
+        })
+    }), CreateEvent: (async (req, res) => {
         const newEvent = new Event({
             NameEvent: req.body.NameEvent,
             Date: req.body.Date,
@@ -65,7 +85,7 @@ const obj = {
                         } else {
                             res.status(200).json({ Success: "Comment added !" })
                         }
-                    }
+                    } 
                 )
             }
 
@@ -82,6 +102,7 @@ const obj = {
 router.get('/allEvents', obj.allEvents);
 router.post('/CreateEvent', obj.CreateEvent);
 router.post('/EventChat', obj.EventChat);
+router.post('/changeEvent', obj.changeEvent);
 // router.post('/EventsByName', obj.EventByName);
 // router.post('/Update', obj.Updateusers);
 module.exports = router;

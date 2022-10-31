@@ -7,7 +7,7 @@ const checkAuth = require("../Auth/checkAuth");
 const obj = {
   getAllUsers: (req, res) => {
     UserSchem.find({}).then((response) => {
-      return res.status(200).json({ response });
+      return res.status(200).json({  GetIt: response  });
     });
   },
   Login: (req, res) => {
