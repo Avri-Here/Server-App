@@ -1,37 +1,25 @@
 const express = require("express");
 const router = express.Router();
 const Event = require("../Schems/CreateEvent");
-const EventChat = require("../Schems/EventChat");
- 
+const UserSchem = require("../Schems/UserSchem");
 const obj = {
-    changeEvent:((req, res) => {
-        const { NameEvent } = req.body;
-        Event.find({ IdEvent: IdEvent }).then((response) => {
-            if (response.length === 0 && NameEvent) {
-                Event.updateOne(
-                    { IdEvent: IdEvent },
-                    { $push: { Active: false } },
-                    function (err, result) {
-                        if (err) {
-                            res.status(500).json({ err })
-                        } else {
-                            res.status(200).json({ Success: "Comment added !" })
-                        }
-                    } 
-                )
-            }
-         
-            else {
-                
-            }
+    changeEvent: ((req, res) => {
 
+        const { name, IdEvent } = req.body;
+        UserSchem.find({ Name: name, admin: "true" }).then((re) => {
+            if (re.length > 0)
+                Event.findByIdAndUpdate(IdEvent, { Active: false }).then((response) => {
+                    console.log(response);
+                    return
+                })
         })
-    }), CreateEvent: (async (req, res) => {
+    }),
+     CreateEvent: (async (req, res) => {
         const newEvent = new Event({
             NameEvent: req.body.NameEvent,
             Date: req.body.Date,
             photoUser: req.body.photoUser,
-            Active:true
+            Active: true
         })
         console.log(newEvent);
         try {
@@ -47,8 +35,7 @@ const obj = {
 
     }), allEvents: (async (req, res) => {
         try {
-            const response = await Event.find({Active:true});
-            console.log(response);
+            const response = await Event.find({ Active: true });
             response.forEach((element, index) => {
                 response[index].Date = element.Date.slice(0, 10);
             });
@@ -85,7 +72,7 @@ const obj = {
                         } else {
                             res.status(200).json({ Success: "Comment added !" })
                         }
-                    } 
+                    }
                 )
             }
 

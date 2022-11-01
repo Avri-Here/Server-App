@@ -7,13 +7,14 @@ const checkAuth = require("../Auth/checkAuth");
 const obj = {
   getAllUsers: (req, res) => {
     UserSchem.find({}).then((response) => {
-      return res.status(200).json({  GetIt: response  });
+      return res.status(200).json({ GetIt: response });
     });
   },
   Login: (req, res) => {
     const { Name1, Name2, pass } = req.body;
     UserSchem.find({ Name: Name1 + " " + Name2, password: pass }).then(
       (response) => {
+        console.log(response);
         if (response.length === 0) {
           return res.status(401).send("לא מזוהה, נסה שוב !");
         } else {
@@ -26,7 +27,7 @@ const obj = {
           );
           return res
             .status(200)
-            .json({ message: response[0].Name, token: token });
+            .json({ message: response[0].Name, isAdmin: response[0].admin, token: token });
         }
       }
     );
