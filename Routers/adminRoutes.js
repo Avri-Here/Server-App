@@ -5,11 +5,11 @@ const jwt = require("jsonwebtoken");
 const checkAuth = require("../Auth/checkAuth");
 const Event = require("../Schems/CreateEvent");
 const EventChat = require("../Schems/EventChat");
+const sendMsgToUser = require("../Schems/sendMsgToUser");
 
 const obj = {
   changeEvent: ((req, res) => {
     const { Name, IdEvent, boolStatus } = req.body;
-    console.log(Name, IdEvent);
     UserSchem.find({ Name: Name, admin: "true" }).then((re) => {
       if (re.length > 0)
         Event.findByIdAndUpdate(IdEvent, { Active: boolStatus }).then((response) => {
@@ -37,50 +37,28 @@ const obj = {
       res.status(410).json({ GetIt: error })
     })
   },
-  Login: (req, res) => {
-    const { Name1, Name2, pass } = req.body;
-    UserSchem.find({ Name: Name1 + " " + Name2, password: pass }).then(
-      (response) => {
-        if (response.length === 0) {
-          return res.status(401).send("לא מזוהה, נסה שוב !");
-        } else {
-          const token = jwt.sign(
-            { UserName: response[0].Name },
-            process.env.JWT_KEY,
-            {
-              expiresIn: "10H",
-            }
-          );
-          return res
-            .status(200)
-            .json({ message: response[0].Name, token: token });
-        }
-      }
-    );
-  },
-  signUp: (req, res) => {
-    const { Name1, Name2, pass } = req.body;
-    UserSchem.find({ Name: Name1 + " " + Name2 }).then((response) => {
-      console.log(response);
-      if (response.length === 0) {
-        const Account = new UserSchem({
-          Name: Name1 + " " + Name2,
-          password: pass,
-          photoUser: "photoUser",
-        });
-        Account.save()
-          .then(() => {
-            res.status(200).json({ message: "Created !  " });
-          })
-          .catch((erorr) => {
-            res.status(500).json({ erorr });
-          });
-      } else {
-        res
-          .status(209)
-          .json({ message: "Conflit !  " + response[0].Name + " Is exsist !" });
-      }
+  ShowAllUsersAdmin: (req, res) => {
+    UserSchem.find({}).then((response) => {
+      return res.status(200).json({ GetIt: response });
     });
+  },
+  sendMsgToUser: (req, res) => {
+    const { arrUsers, msg } = req.body;
+    arrUsers.forEach((item, index) => {
+      console.log(item);
+      const sendMsgToUserNew = new sendMsgToUser({
+        idUser: item,
+        msg: msg
+      })
+      sendMsgToUserNew.save().then(() => {
+        if (index === arrUsers.length - 1) {
+          res.status(200).json({ AllGood: "!" })
+        }
+      }).catch((err) => {
+        res.status(500).json({ err })
+      })
+
+    })
   },
   CreateEvent: (async (req, res) => {
     const newEvent = new Event({
@@ -176,16 +154,6 @@ const obj = {
 };
 router.post("/changeEvent", obj.changeEvent);
 router.get('/allEventsAdmin', obj.allEventsAdmin);
-
-
-// router.post("/", checkAuth, obj.getAllUsers);
-// router.get("/showAllUsers", obj.getAllUsers);
-// router.post("/Login", obj.Login);
-// router.post("/signUp", obj.signUp);
-// router.post("/delete", obj.deleteUser);
-// router.post("/Update", obj.Updateusers);
-// router.get('/allEvents', obj.allEvents);
-// router.post('/idEvent', obj.idEvent);
-// router.post('/CreateEvent', obj.CreateEvent);
-// router.post('/EventChat', obj.EventChat);
+router.get("/ShowAllUsersAdmin", obj.ShowAllUsersAdmin);
+router.post("/sendMsgToUser", obj.sendMsgToUser);
 module.exports = router;
