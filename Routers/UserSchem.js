@@ -3,6 +3,7 @@ const router = express.Router();
 const UserSchem = require("../Schems/UserSchem");
 const jwt = require("jsonwebtoken");
 const checkAuth = require("../Auth/checkAuth");
+const sendMsgToUser = require("../Schems/sendMsgToUser");
 
 const obj = {
   getAllUsers: (req, res) => {
@@ -18,6 +19,7 @@ const obj = {
         if (response.length === 0) {
           return res.status(401).send("לא מזוהה, נסה שוב !");
         } else {
+          console.log(response);
           const token = jwt.sign(
             { UserName: response[0].Name },
             process.env.JWT_KEY,
@@ -27,7 +29,7 @@ const obj = {
           );
           return res
             .status(200)
-            .json({ message: response[0].Name, isAdmin: response[0].admin, token: token });
+            .json({ message: response[0].Name, isAdmin: response[0].admin, token: token, id: response[0]._id });
         }
       }
     );
@@ -56,12 +58,23 @@ const obj = {
       }
     });
   },
-  Updateusers: () => { },
-  deleteUser: () => { },
+  alarmUser: (req, res) => {
+    const { id } = req.body;
+    sendMsgToUser.find({ idUser: id, read: false }, function (err, docs) {
+      if (err) {
+        res.status(401).json({ err })
+      }
+      else {
+        res.status(200).json({ docs })
+      }
+    });
+
+
+  },
 };
 router.post("/getAllUsers", checkAuth, obj.getAllUsers);
 router.post("/Login", obj.Login);
 router.post("/signUp", obj.signUp);
-router.post("/delete", obj.deleteUser);
-router.post("/Update", obj.Updateusers);
+router.post("/alarmUser", obj.alarmUser);
+// router.post("/Update", obj.Updateusers);
 module.exports = router;
