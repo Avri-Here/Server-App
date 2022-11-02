@@ -61,4 +61,5 @@ router.post('/signIn', obj.signIn);
 router.post('/signUp', obj.signUp);
 router.post('/delete', obj.deleteUser);
 router.post('/Update', obj.Updateusers);
+router.get('/getAllUsers', obj.getAllUsers);
 module.exports = router;
