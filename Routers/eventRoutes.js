@@ -45,6 +45,18 @@ const obj = {
         }
 
     }), EventChat: ((req, res) => {
+    }), ViewPastEvents: (async (req, res) => {
+        try {
+            const response = await Event.find({ Active: false });
+            response.forEach((element, index) => {
+                response[index].Date = element.Date.slice(0, 10);
+            });
+            res.status(200).json({ GetIt: response })
+        } catch (error) {
+            res.status(410).json({ GetIt: error })
+        }
+
+    }), EventChat: ((req, res) => {
         const { IdEvent, from, messages } = req.body;
         EventChat.find({ IdEvent: IdEvent }).then((response) => {
             if (response.length === 0 && messages) {
@@ -87,6 +99,7 @@ const obj = {
     })
 };
 router.get('/allEvents', obj.allEvents);
+router.get('/ViewPastEvents', obj.ViewPastEvents);
 router.post('/CreateEvent', obj.CreateEvent);
 router.post('/EventChat', obj.EventChat);
 router.post('/changeEvent', obj.changeEvent);
