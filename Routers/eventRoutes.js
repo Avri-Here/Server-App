@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Event = require("../Schems/CreateEvent");
+const EventChat = require("../Schems/EventChat");
 const UserSchem = require("../Schems/UserSchem");
 const obj = {
     changeEvent: ((req, res) => {
-
         const { name, IdEvent } = req.body;
         UserSchem.find({ Name: name, admin: "true" }).then((re) => {
             if (re.length > 0)
@@ -14,7 +14,7 @@ const obj = {
                 })
         })
     }),
-     CreateEvent: (async (req, res) => {
+    CreateEvent: (async (req, res) => {
         const newEvent = new Event({
             NameEvent: req.body.NameEvent,
             Date: req.body.Date,
@@ -44,7 +44,6 @@ const obj = {
             res.status(410).json({ GetIt: error })
         }
 
-    }), EventChat: ((req, res) => {
     }), ViewPastEvents: (async (req, res) => {
         try {
             const response = await Event.find({ Active: false });
