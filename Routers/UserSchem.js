@@ -71,10 +71,23 @@ const obj = {
 
 
   },
+  UpdateAlarmUser: (req, res) => {
+    const { id } = req.body;
+    sendMsgToUser.findOneAndUpdate({ idUser: id, read: false }, { read: true }, function (err, docs) {
+      if (err) {
+        res.status(401).json({ err })
+      }
+      else {
+        res.status(200).json({ docs })
+      }
+    });
+
+
+  },
 };
 router.post("/getAllUsers", checkAuth, obj.getAllUsers);
 router.post("/Login", obj.Login);
 router.post("/signUp", obj.signUp);
 router.post("/alarmUser", obj.alarmUser);
-// router.post("/Update", obj.Updateusers);
+router.post("/UpdateAlarmUser", obj.UpdateAlarmUser);
 module.exports = router;
