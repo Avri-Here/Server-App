@@ -60,7 +60,7 @@ const obj = {
         EventChat.find({ IdEvent: IdEvent }).then((response) => {
             if (response.length === 0 && messages) {
                 const newEventChat = new EventChat({
-                    IdEvent: IdEvent,
+                    IdEvent: IdEvent,   
                     EventMessages: [{ from: from, messages: messages }]
                 })
                 newEventChat.save().then(() => {
