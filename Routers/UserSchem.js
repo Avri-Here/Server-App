@@ -35,14 +35,14 @@ const obj = {
     );
   },
   signUp: (req, res) => {
-    const { Name1, Name2, pass } = req.body;
+    const { Name1, Name2, pass, photoUser } = req.body;
     UserSchem.find({ Name: Name1 + " " + Name2 }).then((response) => {
       console.log(response);
       if (response.length === 0) {
         const Account = new UserSchem({
           Name: Name1 + " " + Name2,
           password: pass,
-          photoUser: "photoUser",
+          photoUser: photoUser,
         });
         Account.save()
           .then(() => {
