@@ -150,10 +150,24 @@ const obj = {
     })
   }),
   Updateusers: () => { },
-  deleteUser: () => { },
+  deleteUser: ((req, res) => {
+    const { Name, IdUser } = req.body;
+    UserSchem.find({ Name: Name, admin: "true" }).then((re) => {
+      if (re.length > 0)
+      UserSchem.deleteOne({ IdUser: IdUser }).then((response) => {
+          return res.status(200).json({ "delete!": re })
+        })
+      else {
+        return res.status(401).send("No Admin !")
+      }
+    }).catch((err) => {
+      return res.status(500).json(err)
+    })
+  }),  
 };
 router.post("/changeEvent", obj.changeEvent);
 router.get('/allEventsAdmin', obj.allEventsAdmin);
 router.get("/ShowAllUsersAdmin", obj.ShowAllUsersAdmin);
 router.post("/sendMsgToUser", obj.sendMsgToUser);
+router.post("/deleteUser", obj.deleteUser);
 module.exports = router;
