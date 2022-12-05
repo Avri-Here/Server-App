@@ -4,6 +4,7 @@ const UserSchem = require("../Schems/UserSchem");
 const jwt = require("jsonwebtoken");
 const checkAuth = require("../Auth/checkAuth");
 const sendMsgToUser = require("../Schems/sendMsgToUser");
+const sendEmailToAdmin = require("../Util/SandEmail");
 
 const obj = {
   getAllUsers: (req, res) => {
@@ -27,9 +28,12 @@ const obj = {
               expiresIn: "10H",
             }
           );
-          return res
-            .status(200)
-            .json({ message: response[0].Name, isAdmin: response[0].admin, token: token, id: response[0]._id });
+          return res.status(200).json({
+            message: response[0].Name,
+            isAdmin: response[0].admin,
+            token: token,
+            id: response[0]._id,
+          });
         }
       }
     );
@@ -62,27 +66,41 @@ const obj = {
     const { id } = req.body;
     sendMsgToUser.find({ idUser: id, read: false }, function (err, docs) {
       if (err) {
-        res.status(401).json({ err })
-      }
-      else {
-        res.status(200).json({ docs })
+        res.status(401).json({ err });
+      } else {
+        res.status(200).json({ docs });
       }
     });
-
-
   },
   UpdateAlarmUser: (req, res) => {
     const { id } = req.body;
-    sendMsgToUser.findOneAndUpdate({ idUser: id, read: false }, { read: true }, function (err, docs) {
-      if (err) {
-        res.status(401).json({ err })
+    sendMsgToUser.findOneAndUpdate(
+      { idUser: id, read: false },
+      { read: true },
+      function (err, docs) {
+        if (err) {
+          res.status(401).json({ err });
+        } else {
+          res.status(200).json({ docs });
+        }
       }
-      else {
-        res.status(200).json({ docs })
+    );
+  },
+  forgetpass: (req, res) => {
+    const { name, fum } = req.body;
+    UserSchem.findOne({ Name: name + " " + fum }).then((response) => {
+      if (response) {
+        sendEmailToAdmin(name + " " + fum, response.password)
+          .then(() => {
+            res.status(200).json("הודעה נשלחה למנהל מערכת ..");
+          })
+          .catch((e) => {
+            res.status(304).json(e);
+          });
+      } else {
+        res.status(401).send("שם לא מזוהה ..");
       }
     });
-
-
   },
 };
 router.post("/getAllUsers", checkAuth, obj.getAllUsers);
@@ -90,4 +108,5 @@ router.post("/Login", obj.Login);
 router.post("/signUp", obj.signUp);
 router.post("/alarmUser", obj.alarmUser);
 router.post("/UpdateAlarmUser", obj.UpdateAlarmUser);
+router.post("/forgetpass", obj.forgetpass);
 module.exports = router;
