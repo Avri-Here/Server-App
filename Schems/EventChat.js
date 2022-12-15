@@ -7,7 +7,7 @@ const EventChat = mongoose.Schema({
       messages: String,
       timeMass: {
         type: Date,
-        default: Date.now + 3 * 60 * 60 * 1000,
+        default: Date.now() + 2 * 60 * 60 * 1000,
       },
     },
   ],

@@ -53,6 +53,7 @@ const obj = {
   },
   EventChat: (req, res) => {
     const { IdEvent, from, messages } = req.body;
+
     EventChat.find({ IdEvent: IdEvent }).then((response) => {
       if (response.length === 0 && messages) {
         const newEventChat = new EventChat({
