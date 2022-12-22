@@ -71,10 +71,6 @@ const io = socket(server, {
     }
 });
 
-
-
-
-
 io.on('connection', (socket) => {
     socket.on('live On', (msg, userName, idEve, timeMass) => {
         console.log(msg, userName, idEve, timeMass);
